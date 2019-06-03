@@ -4,8 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const app = express();
-var authRouter = require('./auth/auth');
-const connection = require('../sql/helpers/db');
+var authRouter = require('./routes/auth/auth');
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -23,6 +22,6 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-let server = app.listen(process.env.PORT || 3000, function() {
+let server = app.listen(process.env.PORT || 5000, function() {
   console.log('Listening on port ' + server.address().port);
 });
