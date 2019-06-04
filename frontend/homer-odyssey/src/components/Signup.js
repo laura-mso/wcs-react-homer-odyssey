@@ -5,10 +5,11 @@ export default class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstname: 'James',
+      name: 'James',
       lastname: 'Bond',
       email: 'my@email.com',
       password: 'Passw0rd',
+      flash: '',
     };
     this.updateEmailField = this.updateEmailField.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -20,7 +21,18 @@ export default class Signup extends React.Component {
   }
 
   handleSubmit() {
-    console.log(this.state);
+    fetch('/auth/signup', {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify(this.state),
+    })
+      .then(res => res.json())
+      .then(
+        res => this.setState({flash: res.flash}),
+        err => this.setState({flash: err.flash}),
+      );
   }
   render() {
     return (
@@ -32,7 +44,7 @@ export default class Signup extends React.Component {
             <Input
               onChange={this.updateEmailField}
               type='text'
-              name='firstname'
+              name='name'
               id='firstname'
               placeholder='Firstname'
             />
