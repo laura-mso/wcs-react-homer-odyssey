@@ -33,6 +33,13 @@ export default class Signup extends React.Component {
         res => this.setState({flash: res.flash}),
         err => this.setState({flash: err.flash}),
       );
+    this.setState({
+      name: '',
+      lastname: '',
+      email: '',
+      password: '',
+      flash: '',
+    });
   }
   render() {
     return (
