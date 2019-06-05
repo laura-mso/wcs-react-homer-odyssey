@@ -1,23 +1,47 @@
 import React from 'react';
-import {Container, Button, Form, FormGroup, Label, Input} from 'reactstrap';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import {withStyles} from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
-export default class Signup extends React.Component {
+const styles = theme => ({
+  textField: {
+    margin: '10px',
+    width: '80%',
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+});
+
+class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: 'James',
-      lastname: 'Bond',
-      email: 'my@email.com',
-      password: 'Passw0rd',
-      flash: '',
+      name: '',
+      lastname: '',
+      email: '',
+      password: '',
+      flash: 'Not connected',
+      open: false,
     };
     this.updateEmailField = this.updateEmailField.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
   updateEmailField(event) {
     this.setState({
       [event.target.name]: event.target.value,
     });
+  }
+
+  handleClose(event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    this.setState({open: false});
   }
 
   handleSubmit() {
@@ -31,74 +55,110 @@ export default class Signup extends React.Component {
       .then(res => res.json())
       .then(
         res => this.setState({flash: res.flash}),
-        err => this.setState({flash: err.flash}),
+        err => {
+          this.setState({flash: err.flash});
+        },
       );
     this.setState({
       name: '',
       lastname: '',
       email: '',
       password: '',
-      flash: '',
+      open: true,
     });
   }
+
   render() {
+    const {classes} = this.props;
     return (
-      <Container>
-        <Form>
-          <h1>{JSON.stringify(this.state, 1, 1)}</h1>
-          <FormGroup>
-            <Label for='firstname'>Firstname</Label>
-            <Input
-              onChange={this.updateEmailField}
-              type='text'
-              name='name'
-              id='firstname'
-              placeholder='Firstname'
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for='lastname'>Lastname</Label>
-            <Input
-              onChange={this.updateEmailField}
-              type='text'
-              name='lastname'
-              id='lastname'
-              placeholder='Lastname'
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for='email'>Email</Label>
-            <Input
-              onChange={this.updateEmailField}
-              type='email'
-              name='email'
-              id='email'
-              placeholder='Email'
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for='password1'>Password</Label>
-            <Input
-              onChange={this.updateEmailField}
-              type='password'
-              name='password'
-              id='password1'
-              placeholder='Password'
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for='password2'>Repeat password</Label>
-            <Input
-              onChange={this.updateEmailField}
-              type='password'
-              name='password'
-              id='password2'
-              placeholder='Repeat password'
-            />
-          </FormGroup>
-          <Button onClick={this.handleSubmit}>Submit</Button>
-        </Form>
-      </Container>
+      <React.Fragment>
+        <div>
+          <TextField
+            className={classes.textField}
+            onChange={this.updateEmailField}
+            type='text'
+            name='name'
+            id='firstname'
+            label='Firstname'
+            value={this.state.name}
+          />
+        </div>
+        <div>
+          <TextField
+            className={classes.textField}
+            onChange={this.updateEmailField}
+            type='text'
+            name='lastname'
+            id='lastname'
+            label='Lastname'
+            value={this.state.lastname}
+          />
+        </div>
+        <div>
+          <TextField
+            className={classes.textField}
+            onChange={this.updateEmailField}
+            type='email'
+            name='email'
+            id='email'
+            label='Email'
+            value={this.state.email}
+          />
+        </div>
+        <div>
+          <TextField
+            className={classes.textField}
+            onChange={this.updateEmailField}
+            type='password'
+            name='password'
+            id='password1'
+            label='Password'
+            value={this.state.password}
+          />
+        </div>
+        <div>
+          <TextField
+            className={classes.textField}
+            onChange={this.updateEmailField}
+            type='password'
+            name='password'
+            id='password2'
+            label='Repeat password'
+          />
+        </div>
+        <Button
+          variant='contained'
+          color='secondary'
+          className={classes.button}
+          onClick={this.handleSubmit}>
+          Submit
+        </Button>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id='message-id'>{this.state.flash}</span>}
+          action={[
+            <IconButton
+              key='close'
+              aria-label='Close'
+              color='inherit'
+              className={classes.close}
+              onClick={this.handleClose}>
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
+      </React.Fragment>
     );
   }
 }
+
+export default withStyles(styles)(Signup);
