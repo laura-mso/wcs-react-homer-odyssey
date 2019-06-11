@@ -24,6 +24,7 @@ class Signup extends React.Component {
       lastname: '',
       email: '',
       password: '',
+      passwordbis: '',
       flash: 'Not connected',
       open: false,
     };
@@ -64,6 +65,7 @@ class Signup extends React.Component {
       lastname: '',
       email: '',
       password: '',
+      passwordbis: '',
       open: true,
     });
   }
@@ -121,8 +123,8 @@ class Signup extends React.Component {
             className={classes.textField}
             onChange={this.updateEmailField}
             type='password'
-            name='password'
-            id='password2'
+            name='passwordbis'
+            id='passwordbis'
             label='Repeat password'
           />
         </div>
