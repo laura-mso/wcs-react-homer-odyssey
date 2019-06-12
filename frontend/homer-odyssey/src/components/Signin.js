@@ -17,15 +17,12 @@ const styles = theme => ({
   },
 });
 
-class Signup extends React.Component {
+class Signin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      lastname: '',
       email: '',
       password: '',
-      passwordbis: '',
       flash: 'Not connected',
       open: false,
     };
@@ -47,7 +44,7 @@ class Signup extends React.Component {
   }
 
   handleSubmit() {
-    fetch('/auth/signup', {
+    fetch('/auth/signin', {
       method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
@@ -62,12 +59,8 @@ class Signup extends React.Component {
         },
       );
     this.setState({
-      name: '',
-      lastname: '',
       email: '',
       password: '',
-      passwordbis: '',
-      open: true,
     });
   }
 
@@ -75,29 +68,7 @@ class Signup extends React.Component {
     const {classes} = this.props;
     return (
       <React.Fragment>
-        <h3>Sign up</h3>
-        <div>
-          <TextField
-            className={classes.textField}
-            onChange={this.updateInputField}
-            type='text'
-            name='name'
-            id='firstname'
-            label='Firstname'
-            value={this.state.name}
-          />
-        </div>
-        <div>
-          <TextField
-            className={classes.textField}
-            onChange={this.updateInputField}
-            type='text'
-            name='lastname'
-            id='lastname'
-            label='Lastname'
-            value={this.state.lastname}
-          />
-        </div>
+        <h3>Welcome</h3>
         <div>
           <TextField
             className={classes.textField}
@@ -120,27 +91,17 @@ class Signup extends React.Component {
             value={this.state.password}
           />
         </div>
-        <div>
-          <TextField
-            className={classes.textField}
-            onChange={this.updateInputField}
-            type='password'
-            name='passwordbis'
-            id='passwordbis'
-            label='Repeat password'
-          />
-        </div>
-        <Link to='/'>
+        <Link to='/profile'>
           <Button
             variant='contained'
             color='secondary'
             className={classes.button}
             onClick={this.handleSubmit}>
-            Submit
+            Sign in
           </Button>
-          <Link to='/signin' variant='body1'>
-            {'Already signed up? Sign in'}
-          </Link>
+        </Link>
+        <Link to='/signup' variant='body1'>
+          {'Join us! Sign up here'}
         </Link>
         <Snackbar
           anchorOrigin={{
@@ -170,4 +131,4 @@ class Signup extends React.Component {
   }
 }
 
-export default withStyles(styles)(Signup);
+export default withStyles(styles)(Signin);
