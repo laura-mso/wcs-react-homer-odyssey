@@ -3,7 +3,6 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import Signup from './components/Signup';
 import Signin from './components/Signin';
 import Profile from './components/Profile';
-import Heading from './components/Heading';
 import './App.css';
 import {MuiThemeProvider} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';

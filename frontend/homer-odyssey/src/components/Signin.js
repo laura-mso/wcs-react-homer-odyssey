@@ -43,7 +43,8 @@ class Signin extends React.Component {
     this.setState({open: false});
   }
 
-  handleSubmit() {
+  handleSubmit(e) {
+    e.preventDefault();
     fetch('/auth/signin', {
       method: 'POST',
       headers: new Headers({
@@ -51,11 +52,21 @@ class Signin extends React.Component {
       }),
       body: JSON.stringify(this.state),
     })
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error(res.statusText);
+        }
+      })
       .then(
-        res => this.setState({flash: res.flash}),
+        res => {
+          console.log('flash', res.flash);
+          console.log('message', res.message);
+          this.setState({flash: res.message});
+        },
         err => {
-          this.setState({flash: err.flash});
+          this.setState({flash: err.message});
         },
       );
     this.setState({
@@ -91,15 +102,13 @@ class Signin extends React.Component {
             value={this.state.password}
           />
         </div>
-        <Link to='/profile'>
-          <Button
-            variant='contained'
-            color='secondary'
-            className={classes.button}
-            onClick={this.handleSubmit}>
-            Sign in
-          </Button>
-        </Link>
+        <Button
+          variant='contained'
+          color='secondary'
+          className={classes.button}
+          onClick={this.handleSubmit}>
+          Sign in
+        </Button>
         <Link to='/signup' variant='body1'>
           {'Join us! Sign up here'}
         </Link>
