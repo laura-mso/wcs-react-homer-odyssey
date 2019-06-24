@@ -6,6 +6,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 const styles = theme => ({
   textField: {
@@ -16,6 +17,12 @@ const styles = theme => ({
     margin: theme.spacing(1),
   },
 });
+
+function mapStateToProps(state) {
+  return {
+    flash: state.auth.token,
+  };
+}
 
 class Signin extends React.Component {
   constructor(props) {
@@ -44,6 +51,14 @@ class Signin extends React.Component {
   }
 
   handleSubmit(e) {
+    //   this.props.dispatch(
+    //     {
+    //         type : "CREATE_SESSION",
+    //         user: res.user,
+    //         token : res.token,
+    //         message : res.message
+    //     }
+    // )
     e.preventDefault();
     fetch('/auth/signin', {
       method: 'POST',
@@ -54,21 +69,22 @@ class Signin extends React.Component {
     })
       .then(res => {
         if (res.ok) {
+          console.log(res);
           return res.json();
         } else {
           throw new Error(res.statusText);
         }
       })
-      .then(
-        res => {
-          console.log('flash', res.flash);
-          console.log('message', res.message);
-          this.setState({flash: res.message});
-        },
-        err => {
-          this.setState({flash: err.message});
-        },
-      );
+      .then(res => {
+        console.log('here');
+        this.setState({flash: res.message});
+      })
+      .catch(err => {
+        console.log(err.message);
+
+        this.setState({flash: err.message});
+      });
+
     this.setState({
       email: '',
       password: '',
@@ -140,4 +156,4 @@ class Signin extends React.Component {
   }
 }
 
-export default withStyles(styles)(Signin);
+export default connect(mapStateToProps)(withStyles(styles)(Signin));
