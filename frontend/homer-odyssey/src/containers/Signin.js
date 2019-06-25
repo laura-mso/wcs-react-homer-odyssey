@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 const styles = theme => ({
   textField: {
@@ -52,6 +53,7 @@ class Signin extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+
     fetch('/auth/signin', {
       method: 'POST',
       headers: new Headers({
@@ -74,6 +76,9 @@ class Signin extends React.Component {
           token: res.token,
           message: res.msg,
         });
+        if (this.state.open) {
+          this.props.history.push('/profile');
+        }
       })
 
       .catch(err => {
@@ -153,4 +158,4 @@ class Signin extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(Signin));
+export default withRouter(connect(mapStateToProps)(withStyles(styles)(Signin)));
