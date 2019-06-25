@@ -1,9 +1,9 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
-import Signup from './components/Signup';
-import Signin from './components/Signin';
-import Profile from './components/Profile';
-import Heading from './components/Heading';
+import Signup from './containers/Signup';
+import Signin from './containers/Signin';
+import Profile from './containers/Profile';
+import requireAuth from './hoc/requireAuth';
 import './App.css';
 import {MuiThemeProvider} from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -31,7 +31,7 @@ function App() {
                   <Switch>
                     <Route exact path={['/', '/signin']} component={Signin} />
                     <Route path={'/signup'} component={Signup} />
-                    <Route path={'/profile'} component={Profile} />
+                    <Route path={'/profile'} component={requireAuth(Profile)} />
                   </Switch>
                 </BrowserRouter>
               </Grid>

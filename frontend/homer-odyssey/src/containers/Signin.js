@@ -6,6 +6,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 const styles = theme => ({
   textField: {
@@ -16,6 +18,12 @@ const styles = theme => ({
     margin: theme.spacing(1),
   },
 });
+
+function mapStateToProps(state) {
+  return {
+    flash: state.auth.token,
+  };
+}
 
 class Signin extends React.Component {
   constructor(props) {
@@ -43,7 +51,9 @@ class Signin extends React.Component {
     this.setState({open: false});
   }
 
-  handleSubmit() {
+  handleSubmit(e) {
+    e.preventDefault();
+
     fetch('/auth/signin', {
       method: 'POST',
       headers: new Headers({
@@ -51,13 +61,32 @@ class Signin extends React.Component {
       }),
       body: JSON.stringify(this.state),
     })
-      .then(res => res.json())
-      .then(
-        res => this.setState({flash: res.flash}),
-        err => {
-          this.setState({flash: err.flash});
-        },
-      );
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error(res.statusText);
+        }
+      })
+      .then(res => {
+        this.setState({flash: res.msg, open: true});
+        this.props.dispatch({
+          type: 'CREATE_SESSION',
+          user: res.user,
+          token: res.token,
+          message: res.msg,
+        });
+        if (this.state.open) {
+          this.props.history.push('/profile');
+        }
+      })
+
+      .catch(err => {
+        console.log('err');
+
+        this.setState({flash: err.msg, open: true});
+      });
+
     this.setState({
       email: '',
       password: '',
@@ -91,15 +120,13 @@ class Signin extends React.Component {
             value={this.state.password}
           />
         </div>
-        <Link to='/profile'>
-          <Button
-            variant='contained'
-            color='secondary'
-            className={classes.button}
-            onClick={this.handleSubmit}>
-            Sign in
-          </Button>
-        </Link>
+        <Button
+          variant='contained'
+          color='secondary'
+          className={classes.button}
+          onClick={this.handleSubmit}>
+          Sign in
+        </Button>
         <Link to='/signup' variant='body1'>
           {'Join us! Sign up here'}
         </Link>
@@ -109,7 +136,7 @@ class Signin extends React.Component {
             horizontal: 'center',
           }}
           open={this.state.open}
-          autoHideDuration={6000}
+          autoHideDuration={3000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',
@@ -131,4 +158,4 @@ class Signin extends React.Component {
   }
 }
 
-export default withStyles(styles)(Signin);
+export default withRouter(connect(mapStateToProps)(withStyles(styles)(Signin)));
