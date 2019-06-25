@@ -51,14 +51,6 @@ class Signin extends React.Component {
   }
 
   handleSubmit(e) {
-    //   this.props.dispatch(
-    //     {
-    //         type : "CREATE_SESSION",
-    //         user: res.user,
-    //         token : res.token,
-    //         message : res.message
-    //     }
-    // )
     e.preventDefault();
     fetch('/auth/signin', {
       method: 'POST',
@@ -75,9 +67,15 @@ class Signin extends React.Component {
         }
       })
       .then(res => {
-        console.log('res');
         this.setState({flash: res.msg, open: true});
+        this.props.dispatch({
+          type: 'CREATE_SESSION',
+          user: res.user,
+          token: res.token,
+          message: res.msg,
+        });
       })
+
       .catch(err => {
         console.log('err');
 
@@ -133,7 +131,7 @@ class Signin extends React.Component {
             horizontal: 'center',
           }}
           open={this.state.open}
-          autoHideDuration={6000}
+          autoHideDuration={3000}
           onClose={this.handleClose}
           ContentProps={{
             'aria-describedby': 'message-id',
