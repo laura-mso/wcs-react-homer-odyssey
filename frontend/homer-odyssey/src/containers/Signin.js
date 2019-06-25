@@ -62,7 +62,7 @@ class Signin extends React.Component {
       body: JSON.stringify(this.state),
     })
       .then(res => {
-        if (res.ok) {
+        if (res.ok || res.status === 300) {
           return res.json();
         } else {
           throw new Error(res.statusText);
@@ -76,14 +76,12 @@ class Signin extends React.Component {
           token: res.token,
           message: res.msg,
         });
-        if (this.state.open) {
-          this.props.history.push('/profile');
-        }
+        // if (this.state.open) {
+        //   this.props.history.push('/profile');
+        // }
       })
-
       .catch(err => {
-        console.log('err');
-
+        console.log(err);
         this.setState({flash: err.msg, open: true});
       });
 
