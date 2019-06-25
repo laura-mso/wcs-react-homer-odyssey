@@ -64,13 +64,14 @@ router.post('/signup', function(req, res, next) {
 
 router.post('/signin', function(req, res) {
   passport.authenticate('local', (err, user, info) => {
-    if (err) return res.status(500).send(err);
-    if (!user) return res.status(400).json({message: info.message});
+    if (err) return res.status(200).send(err);
+    if (!user) return res.status(200).json({msg: info.message});
+
     const token = jwt.sign(
       JSON.parse(JSON.stringify(user[0])),
       'your_jwt_secret',
     );
-    return res.json({user, token});
+    return res.json({user, token, msg: 'Succesfully logged in'});
   })(req, res);
 });
 

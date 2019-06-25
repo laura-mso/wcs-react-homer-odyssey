@@ -69,20 +69,19 @@ class Signin extends React.Component {
     })
       .then(res => {
         if (res.ok) {
-          console.log(res);
           return res.json();
         } else {
           throw new Error(res.statusText);
         }
       })
       .then(res => {
-        console.log('here');
-        this.setState({flash: res.message});
+        console.log('res');
+        this.setState({flash: res.msg, open: true});
       })
       .catch(err => {
-        console.log(err.message);
+        console.log('err');
 
-        this.setState({flash: err.message});
+        this.setState({flash: err.msg, open: true});
       });
 
     this.setState({
