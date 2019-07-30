@@ -19,6 +19,7 @@ const styles = theme => ({
   },
 });
 
+// why are we doing this? we use flash as a state not as a prop later on
 function mapStateToProps(state) {
   return {
     flash: state.auth.token,
@@ -62,10 +63,10 @@ class Signin extends React.Component {
       body: JSON.stringify(this.state),
     })
       .then(res => {
-        if (res.ok || res.status === 300) {
+        if (res.ok) {
           return res.json();
         } else {
-          throw new Error(res.statusText);
+          throw res;
         }
       })
       .then(res => {
@@ -76,13 +77,15 @@ class Signin extends React.Component {
           token: res.token,
           message: res.msg,
         });
-        // if (this.state.open) {
-        //   this.props.history.push('/profile');
-        // }
+        this.props.history.push('/');
       })
       .catch(err => {
-        console.log(err);
-        this.setState({flash: err.msg, open: true});
+        err
+          .json()
+          .then(body => {
+            this.setState({flash: body.msg, open: true});
+          })
+          .catch(error => this.setState({flash: error, open: true}));
       });
 
     this.setState({
