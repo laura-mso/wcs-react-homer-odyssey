@@ -25,6 +25,12 @@ class Profile extends React.Component {
     };
   }
 
+  handleLogout = () => {
+    this.props.dispatch({
+      type: 'END_SESSION',
+    });
+    this.props.history.push('/');
+  };
   render() {
     const {classes} = this.props;
     return (
@@ -46,12 +52,14 @@ class Profile extends React.Component {
             />
           </ListItem>
         </List>
+        {/* // What to do here? it shouldnt be just a link anymore but log the
+        signed in user out. add reducer to set token to undefined! */}
         <Link to='/signin'>
           <Button
             variant='contained'
             color='secondary'
             className={classes.button}
-            onClick={this.handleSubmit}>
+            onClick={this.handleLogout}>
             Sign out
           </Button>
         </Link>
